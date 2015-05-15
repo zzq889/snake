@@ -105,7 +105,8 @@ class Game:
             cx = margin + rows * cellWidth / 2
             cy = margin + cols * cellWidth / 2
             self.canvas.create_text(cx, cy, text="Game Over!", font=("Helvetica", 32, "bold"))
-            self.canvas.create_text(cx, cy + 32, text="press 'space' to restart", font=("Helvetica", 22))
+            self.canvas.create_text(cx, cy + 32,
+                text="press 'space' to restart", font=("Helvetica", 22))
 
     def redrawAll(self):
         self.canvas.delete(ALL)
@@ -131,9 +132,14 @@ class Game:
         self.canvas.create_rectangle(left, top, right, bottom, fill=color, width=0)
 
     def keyPressed(self, event):
+        hKeys = [KEY_LEFT, KEY_RIGHT]
+        vKeys = [KEY_UP, KEY_DOWN]
+
+        allowedKeys = vKeys if self.snake.keyPressed in hKeys else hKeys
+
         if event.keysym == "space":
             self.restartGame()
-        elif event.keysym != self.snake.keyPressed and event.keysym in [KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT]:
+        elif event.keysym in allowedKeys:
             self.snake.keyPressed = event.keysym
             self.root.after_cancel(self._task)
             self.timerFired()
